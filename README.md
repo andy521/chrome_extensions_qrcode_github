@@ -1,0 +1,2 @@
+# chrome_extensions_qrcode_github
+Chrome简易二维码插件
