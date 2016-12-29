@@ -1,0 +1,16 @@
+{
+    "name": "简易二维码",
+    "version": "1.0.0",
+    "manifest_version": 2,
+    "description": "通过输入文本内容生成二维码！",
+    "author": "青峰 qingfeng@showjoy.com",
+    "icons": {
+        "16": "icon.png",
+        "48": "icon.png",
+        "128": "icon.png"
+    },
+    "browser_action": {
+        "default_icon": "icon.png",
+        "default_popup": "popup.html"
+    }
+}
