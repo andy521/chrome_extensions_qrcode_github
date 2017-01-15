@@ -10,7 +10,7 @@
 
 # 使用方法
 
-拖拽CRX文件进入[Chrome扩展程序页面](chrome://extensions/)网页即可实现安装
+拖拽CRX文件进入 <font color='red'>chrome://extensions/</font> 网页即可实现安装
 
 # 制作流程
 
