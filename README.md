@@ -1,4 +1,4 @@
-# chrome_extensions_qrcode_github
+# chrome_extensions_qrcode
 Chrome简易二维码插件
 
 使用方法：拖拽CRX文件进入<chrome://extensions/>网页即可实现安装

@@ -2,27 +2,36 @@
 * @Author: qingfeng
 * @Date:   2016-12-29 11:55:22
 * @Last Modified by:   qingfeng
-* @Last Modified time: 2016-12-29 13:43:26
+* @Last Modified time: 2017-01-15 19:36:58
 */
 
 $(function(){
     $("#confirm").click(function(){
-        // 清空
-        $("#qrcode").empty();
-        // 获得内容
-        var decodeContent = toUtf8($("#content").val());
-        // 根据内容长度来确定展示二维码的大小
-        if (decodeContent.length < 200) {
-            $('#qrcode').qrcode(decodeContent);
-        } else {
-            $('#qrcode').qrcode({
-                width: 300,
-                height: 300,
-                text: decodeContent
-            });
+        getQRcode();
+    });
+    $("#content").keydown(function(event){
+        if(event.which == "13") {
+            getQRcode();
         }
     });
 })
+
+function getQRcode() {
+    // 清空
+    $("#qrcode").empty();
+    // 获得内容
+    var decodeContent = toUtf8($("#content").val());
+    // 根据内容长度来确定展示二维码的大小
+    if (decodeContent.length < 200) {
+        $('#qrcode').qrcode(decodeContent);
+    } else {
+        $('#qrcode').qrcode({
+            width: 300,
+            height: 300,
+            text: decodeContent
+        });
+    }
+}
 
 function toUtf8(str) {
     var out, i, len, c;
