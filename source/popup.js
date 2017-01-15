@@ -2,21 +2,46 @@
 * @Author: qingfeng
 * @Date:   2016-12-29 11:55:22
 * @Last Modified by:   qingfeng
-* @Last Modified time: 2017-01-15 19:36:58
+* @Last Modified time: 2017-01-15 23:13:51
 */
 
 $(function(){
-    $("#confirm").click(function(){
-        getQRcode();
-    });
-    $("#content").keydown(function(event){
-        if(event.which == "13") {
-            getQRcode();
-        }
-    });
+    var decodeContent = $.query.get("query");
+    if (decodeContent.length > 0) {
+        document.getElementById("tip").style.display="none";
+        document.getElementById("content").style.display="none";
+        document.getElementById("confirm").style.display="none";
+
+        showQRcodeByContextMenu(decodeContent);
+    } else {
+        document.getElementById("tip").style.display="visible";
+        document.getElementById("content").style.display="visible";
+        document.getElementById("confirm").style.display="visible";
+
+        $("#confirm").click(function(){
+            showQRcodeByTab();
+        });
+        $("#content").keydown(function(event){
+            if(event.which == "13") {
+                showQRcodeByTab();
+            }
+        });
+    }
 })
 
-function getQRcode() {
+function showQRcodeByContextMenu(decodeContent) {
+    var w = $(window).width() - 20;
+    var h = $(window).height() - 20;
+    $("title").text(decodeContent);
+    $("#qrcode").attr("title",decodeContent);
+    $("#qrcode").qrcode({
+        width : w,
+        height : h,
+        text : toUtf8(decodeContent)
+    });
+}
+
+function showQRcodeByTab() {
     // 清空
     $("#qrcode").empty();
     // 获得内容

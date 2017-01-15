@@ -5,11 +5,12 @@
         <meta charset="utf-8"/>
         <link href="./popup.css" type="text/css" rel="stylesheet"/>
         <script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+        <script type="text/javascript" src="js/jquery-2.1.7.query.js"></script>
         <script type="text/javascript" src="js/jquery.qrcode.min.js"></script>
         <script type="text/javascript" src="./popup.js"></script>
     </head>
     <body>
-        请输入文本内容:<br/>
+        <div id="tip">请输入文本内容:</div>
         <input type="text" id="content">
         <input type="button" id="confirm" value="生成二维码">
         <div id="qrcode"></div>

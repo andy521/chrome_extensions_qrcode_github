@@ -1,8 +1,8 @@
 {
     "name": "简易二维码",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "manifest_version": 2,
-    "description": "通过输入文本内容生成二维码！",
+    "description": "支持生成二维码的方式：1、输入内容回车；2、输入内容点击生成二维码按钮；3、选中文字右击生成二维码",
     "author": "青峰 qingfeng@showjoy.com",
     "icons": {
         "16": "images/icon16.png",
@@ -12,5 +12,13 @@
     "browser_action": {
         "default_icon": "images/icon19.png",
         "default_popup": "popup.html"
+    },
+    "permissions": [
+      "contextMenus"
+    ],
+    "background": {
+        "scripts": [
+            "js/background.js"
+        ]
     }
 }
