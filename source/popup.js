@@ -2,7 +2,7 @@
 * @Author: qingfeng
 * @Date:   2016-12-29 11:55:22
 * @Last Modified by:   qingfeng
-* @Last Modified time: 2017-01-15 23:13:51
+* @Last Modified time: 2017-02-07 18:05:04
 */
 
 $(function(){
@@ -18,12 +18,26 @@ $(function(){
         document.getElementById("content").style.display="visible";
         document.getElementById("confirm").style.display="visible";
 
+        var ldc = "";
+        // Check browser support
+        if (typeof(Storage) !== "undefined") {
+            ldc = localStorage.getItem("lastDecodeContent");
+            if (ldc == null) {
+                ldc = "";
+            }
+            // 为input赋值
+            var contentValue = document.getElementById("content");
+            contentValue.value = ldc;
+            // 显示二维码
+            createQRcode(ldc);
+        }
+        // 点击事件
         $("#confirm").click(function(){
-            showQRcodeByTab();
+            showQRcodeByTab(ldc);
         });
         $("#content").keydown(function(event){
             if(event.which == "13") {
-                showQRcodeByTab();
+                showQRcodeByTab(ldc);
             }
         });
     }
@@ -41,19 +55,30 @@ function showQRcodeByContextMenu(decodeContent) {
     });
 }
 
-function showQRcodeByTab() {
+function showQRcodeByTab(ldc) {
     // 清空
     $("#qrcode").empty();
     // 获得内容
     var decodeContent = toUtf8($("#content").val());
+    // 将外部输入的内容赋值给ldc
+    ldc = decodeContent;
+    // Check browser support
+    if (typeof(Storage) !== "undefined") {
+        localStorage.setItem("lastDecodeContent", decodeContent);
+    }
+    // 显示二维码
+    createQRcode(ldc);
+}
+
+function createQRcode(ldc) {
     // 根据内容长度来确定展示二维码的大小
-    if (decodeContent.length < 200) {
-        $('#qrcode').qrcode(decodeContent);
+    if (ldc.length < 200) {
+        $('#qrcode').qrcode(ldc);
     } else {
         $('#qrcode').qrcode({
             width: 300,
             height: 300,
-            text: decodeContent
+            text: ldc
         });
     }
 }
