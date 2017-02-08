@@ -10,10 +10,12 @@
         <script type="text/javascript" src="./popup.js"></script>
     </head>
     <body>
-        <div id="tip">请输入文本内容:</div>
-        <input type="text" id="content">
-        <input type="button" id="confirm" value="生成二维码">
+        <p id="getText">请输入文本内容:<input type="text" id="content" /></p>
+        <p id="handleText">
+            <input type="button" id="confirm" value="生成二维码" />
+            <input type="checkbox" id="showLast" title="每次打开都会显示上一次的二维码" />显示上一次
+        </p>
         <div id="qrcode"></div>
-        <div id="result"></div>
+        <div id="errorTip"></div>
     </body>
 </html>

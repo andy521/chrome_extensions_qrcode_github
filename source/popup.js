@@ -2,37 +2,46 @@
 * @Author: qingfeng
 * @Date:   2016-12-29 11:55:22
 * @Last Modified by:   qingfeng
-* @Last Modified time: 2017-02-07 19:54:21
+* @Last Modified time: 2017-02-08 11:43:01
 */
 
-$(function(){
+$(function () {
     var decodeContent = $.query.get("query");
     if (decodeContent.length > 0) {
-        document.getElementById("tip").style.display="none";
-        document.getElementById("content").style.display="none";
-        document.getElementById("confirm").style.display="none";
+        $("#getText").css("display", "none");
+        $("#handleText").css("display", "none");
+        $("#errorTip").css("display", "none");
 
         showQRcodeByContextMenu(decodeContent);
     } else {
-        document.getElementById("tip").style.display="visible";
-        document.getElementById("content").style.display="visible";
-        document.getElementById("confirm").style.display="visible";
+        $("#getText").css("display", "visible");
+        $("#handleText").css("display", "visible");
+        $("#errorTip").css("display", "visible");
+
+        // chrome extension can't handle onClick in html
+        // such as: <input type="checkbox" id="showLast" onclick="saveShowLastChecked()" />
+        document.querySelector('#showLast').addEventListener('click', saveShowLastChecked);
 
         var ldc = "";
         // Check browser support
         if (typeof(Storage) !== "undefined") {
-            ldc = localStorage.getItem("lastDecodeContent");
-            if (ldc == null) {
-                ldc = "";
+            if (localStorage.getItem("showLastChecked") == "checked") {
+                $("#showLast").attr("checked", true);
+
+                ldc = localStorage.getItem("lastDecodeContent");
+                if (ldc == null) {
+                    ldc = "";
+                }
+                // 为input赋值
+                $("#content").val(ldc);
+            } else {
+                $("#showLast").attr("checked", false);
             }
-            // 为input赋值
-            var contentValue = document.getElementById("content");
-            contentValue.value = ldc;
-            // 显示二维码
-            createQRcode(ldc);
         } else {
-            document.getElementById("result").innerHTML = "抱歉！您的浏览器不支持 Web Storage ...";
+            $("#errorTip").html("抱歉！您的浏览器不支持显示上一次的二维码");
         }
+        // 显示二维码
+        createQRcode(ldc);
         // 点击事件
         $("#confirm").click(function(){
             showQRcodeByTab(ldc);
@@ -43,13 +52,20 @@ $(function(){
             }
         });
     }
-})
+});
+
+function saveShowLastChecked() {
+    // Check browser support
+    if (typeof(Storage) !== "undefined") {
+        localStorage.setItem("showLastChecked", $("#showLast").attr("checked"));
+    }
+}
 
 function showQRcodeByContextMenu(decodeContent) {
     var w = $(window).width() - 20;
     var h = $(window).height() - 20;
     $("title").text(decodeContent);
-    $("#qrcode").attr("title",decodeContent);
+    $("#qrcode").attr("title", decodeContent);
     $("#qrcode").qrcode({
         width : w,
         height : h,
@@ -64,11 +80,11 @@ function showQRcodeByTab(ldc) {
     var decodeContent = $("#content").val();
     // 将外部输入的内容赋值给ldc
     ldc = decodeContent;
-    // Check browser support
-    if (typeof(Storage) !== "undefined") {
-        localStorage.setItem("lastDecodeContent", ldc);
-    } else {
-        document.getElementById("result").innerHTML = "抱歉！您的浏览器不支持 Web Storage ...";
+    if ($("#showLast").attr("checked")) {
+        // Check browser support
+        if (typeof(Storage) !== "undefined") {
+            localStorage.setItem("lastDecodeContent", ldc);
+        }
     }
     // 显示二维码
     createQRcode(ldc);
