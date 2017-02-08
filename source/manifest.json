@@ -2,7 +2,7 @@
     "name": "简易二维码",
     "version": "1.1.0",
     "manifest_version": 2,
-    "description": "支持生成二维码的方式：1、输入内容回车；2、输入内容点击生成二维码按钮；3、选中文字右击生成二维码",
+    "description": "支持通过'回车'、'点击生成二维码按钮'、'右击'方式生成二维码；支持自定义开关上一次二维码的显示",
     "author": "青峰 qingfeng@showjoy.com",
     "icons": {
         "16": "images/icon16.png",
