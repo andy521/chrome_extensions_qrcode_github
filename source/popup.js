@@ -2,7 +2,7 @@
 * @Author: qingfeng
 * @Date:   2016-12-29 11:55:22
 * @Last Modified by:   qingfeng
-* @Last Modified time: 2017-02-08 11:43:01
+* @Last Modified time: 2017-02-09 16:59:06
 */
 
 $(function () {
@@ -101,4 +101,11 @@ function createQRcode(ldc) {
             text: ldc
         });
     }
+    convertCanvasToImg();
+}
+
+function convertCanvasToImg() {
+    var mCanvas = $("#qrcode").find("canvas")[0];
+    var image = mCanvas.toDataURL("image/png");
+    $("#qrcode").html("<img src='"+image+"' title='from canvas'/>");
 }
