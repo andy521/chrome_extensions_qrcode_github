@@ -2,7 +2,7 @@
 * @Author: qingfeng
 * @Date:   2016-12-29 11:55:22
 * @Last Modified by:   qingfeng
-* @Last Modified time: 2017-02-12 22:09:20
+* @Last Modified time: 2017-02-12 22:27:36
 */
 
 $(function () {
@@ -69,7 +69,7 @@ function showQRcodeByContextMenu(decodeContent) {
     $("#qrcode").qrcode({
         width : w,
         height : h,
-        text : decodeContent
+        text : utf16to8(decodeContent)
     });
 }
 
@@ -91,24 +91,23 @@ function showQRcodeByTab(ldc) {
 }
 
 function createQRcode(ldc) {
-    var finalQRcode = utf16to8(ldc);
     // 根据内容长度来确定展示二维码的大小
-    if (finalQRcode.length < 200) {
-        $('#qrcode').qrcode(finalQRcode);
+    if (ldc.length < 200) {
+        $('#qrcode').qrcode(utf16to8(ldc));
     } else {
         $('#qrcode').qrcode({
             width: 300,
             height: 300,
-            text: finalQRcode
+            text: utf16to8(ldc)
         });
     }
-    convertCanvasToImg();
+    convertCanvasToImg(ldc);
 }
 
-function convertCanvasToImg() {
+function convertCanvasToImg(ldc) {
     var mCanvas = $("#qrcode").find("canvas")[0];
     var image = mCanvas.toDataURL("image/png");
-    $("#qrcode").html("<img src='"+image+"' title='from canvas'/>");
+    $("#qrcode").html("<img src='"+image+"' title='"+ldc+"'/>");
 }
 
 function utf16to8(str) {
