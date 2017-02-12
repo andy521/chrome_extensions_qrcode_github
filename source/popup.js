@@ -2,7 +2,7 @@
 * @Author: qingfeng
 * @Date:   2016-12-29 11:55:22
 * @Last Modified by:   qingfeng
-* @Last Modified time: 2017-02-09 16:59:06
+* @Last Modified time: 2017-02-12 22:09:20
 */
 
 $(function () {
@@ -91,14 +91,15 @@ function showQRcodeByTab(ldc) {
 }
 
 function createQRcode(ldc) {
+    var finalQRcode = utf16to8(ldc);
     // 根据内容长度来确定展示二维码的大小
-    if (ldc.length < 200) {
-        $('#qrcode').qrcode(ldc);
+    if (finalQRcode.length < 200) {
+        $('#qrcode').qrcode(finalQRcode);
     } else {
         $('#qrcode').qrcode({
             width: 300,
             height: 300,
-            text: ldc
+            text: finalQRcode
         });
     }
     convertCanvasToImg();
@@ -108,4 +109,24 @@ function convertCanvasToImg() {
     var mCanvas = $("#qrcode").find("canvas")[0];
     var image = mCanvas.toDataURL("image/png");
     $("#qrcode").html("<img src='"+image+"' title='from canvas'/>");
+}
+
+function utf16to8(str) {
+    var out, i, len, c;
+    out = "";
+    len = str.length;
+    for(i = 0; i < len; i++) {
+        c = str.charCodeAt(i);
+        if ((c >= 0x0001) && (c <= 0x007F)) {
+            out += str.charAt(i);
+        } else if (c > 0x07FF) {
+            out += String.fromCharCode(0xE0 | ((c >> 12) & 0x0F));
+            out += String.fromCharCode(0x80 | ((c >>  6) & 0x3F));
+            out += String.fromCharCode(0x80 | ((c >>  0) & 0x3F));
+        } else {
+            out += String.fromCharCode(0xC0 | ((c >>  6) & 0x1F));
+            out += String.fromCharCode(0x80 | ((c >>  0) & 0x3F));
+        }
+    }
+    return out;
 }
