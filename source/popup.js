@@ -2,7 +2,7 @@
 * @Author: qingfeng
 * @Date:   2016-12-29 11:55:22
 * @Last Modified by:   qingfeng
-* @Last Modified time: 2017-02-12 22:27:36
+* @Last Modified time: 2017-02-13 14:29:06
 */
 
 $(function () {
@@ -22,33 +22,40 @@ $(function () {
         // such as: <input type="checkbox" id="showLast" onclick="saveShowLastChecked()" />
         document.querySelector('#showLast').addEventListener('click', saveShowLastChecked);
 
-        var ldc = "";
+        var decodeContent = "";
         // Check browser support
         if (typeof(Storage) !== "undefined") {
             if (localStorage.getItem("showLastChecked") == "checked") {
                 $("#showLast").attr("checked", true);
 
-                ldc = localStorage.getItem("lastDecodeContent");
-                if (ldc == null) {
-                    ldc = "";
+                decodeContent = localStorage.getItem("lastDecodeContent");
+                if (decodeContent == null) {
+                    decodeContent = "";
                 }
                 // 为input赋值
-                $("#content").val(ldc);
+                $("#content").val(decodeContent);
             } else {
                 $("#showLast").attr("checked", false);
+
+                chrome.tabs.getSelected(function(tab){
+                    // 为input赋值
+                    $("#content").val(tab.url);
+                    // 生成当前URL二维码
+                    createQRcode(tab.url);
+                });
             }
         } else {
             $("#errorTip").html("抱歉！您的浏览器不支持显示上一次的二维码");
         }
         // 显示二维码
-        createQRcode(ldc);
+        createQRcode(decodeContent, 300, 300);
         // 点击事件
         $("#confirm").click(function(){
-            showQRcodeByTab(ldc);
+            showQRcodeByTab(decodeContent);
         });
         $("#content").keydown(function(event){
             if(event.which == "13") {
-                showQRcodeByTab(ldc);
+                showQRcodeByTab(decodeContent);
             }
         });
     }
@@ -61,53 +68,48 @@ function saveShowLastChecked() {
     }
 }
 
-function showQRcodeByContextMenu(decodeContent) {
+function showQRcodeByContextMenu(finalDecodeContent) {
+    $("title").text(finalDecodeContent);
     var w = $(window).width() - 20;
     var h = $(window).height() - 20;
-    $("title").text(decodeContent);
-    $("#qrcode").attr("title", decodeContent);
-    $("#qrcode").qrcode({
-        width : w,
-        height : h,
-        text : utf16to8(decodeContent)
-    });
+    createQRcode(finalDecodeContent, w, h);
 }
 
-function showQRcodeByTab(ldc) {
+function showQRcodeByTab(finalDecodeContent) {
     // 清空
     $("#qrcode").empty();
     // 获得内容
     var decodeContent = $("#content").val();
-    // 将外部输入的内容赋值给ldc
-    ldc = decodeContent;
+    // 将外部输入的内容赋值给finalDecodeContent
+    finalDecodeContent = decodeContent;
     if ($("#showLast").attr("checked")) {
         // Check browser support
         if (typeof(Storage) !== "undefined") {
-            localStorage.setItem("lastDecodeContent", ldc);
+            localStorage.setItem("lastDecodeContent", finalDecodeContent);
         }
     }
     // 显示二维码
-    createQRcode(ldc);
+    createQRcode(finalDecodeContent, 300, 300);
 }
 
-function createQRcode(ldc) {
+function createQRcode(finalDecodeContent, width, height) {
     // 根据内容长度来确定展示二维码的大小
-    if (ldc.length < 200) {
-        $('#qrcode').qrcode(utf16to8(ldc));
+    if (finalDecodeContent.length < 200) {
+        $('#qrcode').qrcode(utf16to8(finalDecodeContent));
     } else {
         $('#qrcode').qrcode({
-            width: 300,
-            height: 300,
-            text: utf16to8(ldc)
+            width: width,
+            height: height,
+            text: utf16to8(finalDecodeContent)
         });
     }
-    convertCanvasToImg(ldc);
+    convertCanvasToImg(finalDecodeContent);
 }
 
-function convertCanvasToImg(ldc) {
+function convertCanvasToImg(finalDecodeContent) {
     var mCanvas = $("#qrcode").find("canvas")[0];
     var image = mCanvas.toDataURL("image/png");
-    $("#qrcode").html("<img src='"+image+"' title='"+ldc+"'/>");
+    $("#qrcode").html("<img src='"+image+"' title='"+finalDecodeContent+"'/>");
 }
 
 function utf16to8(str) {
