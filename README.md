@@ -14,4 +14,4 @@
 
 # 制作流程
 
-如果你有兴趣了解Chrome插件的制作流程，可以浏览我编写的这篇博客：[Chrome插件制作](http://fqxyi.com/基本工具/Plugins/Chrome插件制作.html)
+如果你有兴趣了解Chrome插件的制作流程，可以浏览我编写的这篇博客：[Chrome插件制作](http://fqxyi.com/基本工具/Plugins/Chrome插件制作/)
